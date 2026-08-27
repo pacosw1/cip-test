@@ -5,7 +5,7 @@ const spec = {
   name: "cip-test",
   jobs: [
     { name: "lint", steps: [{ run: "echo linting..." }] },
-    { name: "test", steps: [{ run: "echo testing in VM: $(uname -r); cat /proc/cpuinfo | grep -c processor" }], limits: { timeoutSec: 300 } },
+    { name: "test", steps: [{ run: "echo net test from VM $(uname -r):" }, { run: "curl -sI https://api.github.com | head -1" }], limits: { timeoutSec: 300 } },
     { name: "build", steps: [{ run: "echo building..." }, { run: "echo done" }], needs: ["lint", "test"] },
   ],
 };
