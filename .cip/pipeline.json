@@ -2,44 +2,17 @@
   "version": "0",
   "name": "cip-test",
   "stages": [
-    {
-      "name": "build",
-      "jobs": [
-        {
-          "name": "steppy",
-          "steps": [
-            {
-              "run": "echo quick build"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "deploy",
-      "needs": [
-        "build"
-      ],
-      "jobs": [
-        {
-          "name": "ship",
-          "steps": [
-            {
-              "run": "echo shipping; false"
-            }
-          ]
-        }
-      ],
-      "rollback": [
-        {
-          "name": "revert",
-          "steps": [
-            {
-              "run": "echo ROLLED-BACK"
-            }
-          ]
-        }
-      ]
-    }
+    {"name": "build", "jobs": [
+      {"name": "make", "steps": [
+        {"run": "echo built-in-vm-$(uname -r)-at-$(date +%s) > $CIP_ARTIFACTS/app.bin"},
+        {"run": "cat $CIP_ARTIFACTS/app.bin"}
+      ]}
+    ]},
+    {"name": "deploy", "needs": ["build"], "jobs": [
+      {"name": "ship", "steps": [
+        {"run": "echo deploying artifact:; cat $CIP_ARTIFACTS/app.bin"},
+        {"run": "grep -q built-in-vm $CIP_ARTIFACTS/app.bin"}
+      ]}
+    ]}
   ]
 }
