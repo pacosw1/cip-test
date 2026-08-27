@@ -1,0 +1,19 @@
+{
+  "version": "0",
+  "name": "cip-test",
+  "stages": [
+    {"name": "build", "jobs": [
+      {"name": "test", "steps": [{"run": "echo running tests in VM $(uname -r)"}]},
+      {"name": "lint", "steps": [{"run": "echo linting"}]}
+    ]},
+    {"name": "beta", "needs": ["build"], "jobs": [
+      {"name": "deploy", "steps": [{"run": "echo deploying to beta"}]}
+    ]},
+    {"name": "prod", "needs": ["beta"],
+     "gates": [
+       {"type": "check", "run": "test -f README.md"},
+       {"type": "manual"}
+     ],
+     "jobs": [{"name": "deploy", "steps": [{"run": "echo deploying to prod"}]}]}
+  ]
+}
