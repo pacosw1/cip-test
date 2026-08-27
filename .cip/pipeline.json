@@ -2,15 +2,44 @@
   "version": "0",
   "name": "cip-test",
   "stages": [
-    {"name": "build", "jobs": [
-      {"name": "steppy", "steps": [
-        {"run": "echo s1-done"},
-        {"run": "sleep 50; echo s2-done"},
-        {"run": "echo s3-done"}
-      ]}
-    ]},
-    {"name": "deploy", "needs": ["build"],
-     "jobs": [{"name": "ship", "steps": [{"run": "echo shipping; false"}]}],
-     "rollback": [{"name": "revert", "steps": [{"run": "echo ROLLED-BACK"}]}]}
+    {
+      "name": "build",
+      "jobs": [
+        {
+          "name": "steppy",
+          "steps": [
+            {
+              "run": "echo quick build"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "deploy",
+      "needs": [
+        "build"
+      ],
+      "jobs": [
+        {
+          "name": "ship",
+          "steps": [
+            {
+              "run": "echo shipping; false"
+            }
+          ]
+        }
+      ],
+      "rollback": [
+        {
+          "name": "revert",
+          "steps": [
+            {
+              "run": "echo ROLLED-BACK"
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
