@@ -3,11 +3,14 @@
   "name": "cip-test",
   "stages": [
     {"name": "build", "jobs": [
-      {"name": "quick", "steps": [{"run": "echo quick done"}]},
-      {"name": "slow", "steps": [{"run": "echo slow starting; sleep 60; echo slow done"}]}
+      {"name": "steppy", "steps": [
+        {"run": "echo s1-done"},
+        {"run": "sleep 50; echo s2-done"},
+        {"run": "echo s3-done"}
+      ]}
     ]},
-    {"name": "verify", "needs": ["build"], "jobs": [
-      {"name": "check", "steps": [{"run": "echo verified"}]}
-    ]}
+    {"name": "deploy", "needs": ["build"],
+     "jobs": [{"name": "ship", "steps": [{"run": "echo shipping; false"}]}],
+     "rollback": [{"name": "revert", "steps": [{"run": "echo ROLLED-BACK"}]}]}
   ]
 }
