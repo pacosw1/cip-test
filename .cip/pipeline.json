@@ -3,16 +3,13 @@
   "name": "cip-test",
   "stages": [
     {"name": "build", "jobs": [
-      {"name": "make", "steps": [
-        {"run": "echo built-in-vm-$(uname -r)-at-$(date +%s) > $CIP_ARTIFACTS/app.bin"},
-        {"run": "cat $CIP_ARTIFACTS/app.bin"}
-      ]}
+      {"name": "make", "steps": [{"run": "echo built > $CIP_ARTIFACTS/app.bin"}]}
     ]},
-    {"name": "deploy", "needs": ["build"], "jobs": [
-      {"name": "ship", "steps": [
-        {"run": "echo deploying artifact:; cat $CIP_ARTIFACTS/app.bin"},
-        {"run": "grep -q built-in-vm $CIP_ARTIFACTS/app.bin"}
-      ]}
-    ]}
+    {"name": "beta", "needs": ["build"],
+     "jobs": [{"name": "deploy", "steps": [{"run": "echo deployed beta"}]}],
+     "rollback": [{"name": "revert", "steps": [{"run": "echo REVERTED-BETA"}]}]},
+    {"name": "prod", "needs": ["beta"],
+     "gates": [{"type": "alarm", "run": "test -f /nonexistent-alarm-file", "minutes": 10}],
+     "jobs": [{"name": "deploy", "steps": [{"run": "echo deployed prod"}]}]}
   ]
 }
