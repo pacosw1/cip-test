@@ -3,17 +3,11 @@
   "name": "cip-test",
   "stages": [
     {"name": "build", "jobs": [
-      {"name": "test", "steps": [{"run": "echo running tests in VM $(uname -r)"}]},
-      {"name": "lint", "steps": [{"run": "echo linting"}]}
+      {"name": "quick", "steps": [{"run": "echo quick done"}]},
+      {"name": "slow", "steps": [{"run": "echo slow starting; sleep 60; echo slow done"}]}
     ]},
-    {"name": "beta", "needs": ["build"], "jobs": [
-      {"name": "deploy", "steps": [{"run": "echo deploying to beta"}]}
-    ]},
-    {"name": "prod", "needs": ["beta"],
-     "gates": [
-       {"type": "check", "run": "test -f README.md"},
-       {"type": "manual"}
-     ],
-     "jobs": [{"name": "deploy", "steps": [{"run": "echo deploying to prod"}]}]}
+    {"name": "verify", "needs": ["build"], "jobs": [
+      {"name": "check", "steps": [{"run": "echo verified"}]}
+    ]}
   ]
 }
