@@ -2,14 +2,7 @@
   "version": "0",
   "name": "cip-test",
   "stages": [
-    {"name": "build", "jobs": [
-      {"name": "make", "steps": [{"run": "echo built > $CIP_ARTIFACTS/app.bin"}]}
-    ]},
-    {"name": "beta", "needs": ["build"],
-     "jobs": [{"name": "deploy", "steps": [{"run": "echo deployed beta"}]}],
-     "rollback": [{"name": "revert", "steps": [{"run": "echo REVERTED-BETA"}]}]},
-    {"name": "prod", "needs": ["beta"],
-     "gates": [{"type": "alarm", "run": "test -f /nonexistent-alarm-file", "minutes": 10}],
-     "jobs": [{"name": "deploy", "steps": [{"run": "echo deployed prod"}]}]}
+    {"name": "build", "jobs": [{"name": "make", "steps": [{"run": "echo built via relay"}]}]},
+    {"name": "deploy", "needs": ["build"], "jobs": [{"name": "ship", "steps": [{"run": "echo shipped"}]}]}
   ]
 }
