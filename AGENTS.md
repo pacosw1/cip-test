@@ -21,6 +21,8 @@ hour, not checks run.
   migration) justifies one. Never set an execution policy on a task.
 - No status chatter. Report when work is finished, failed, or needs the
   user's decision.
+- The sidecar tells you every few minutes how long the turn has run; use
+  it to check your estimate.
 
 ### Tests
 
